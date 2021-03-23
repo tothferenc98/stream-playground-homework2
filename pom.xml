@@ -9,8 +9,8 @@
     <packaging>jar</packaging>
     <developers>
         <developer>
-            <name><!-- YOUR NAME --></name>
-            <email><!-- YOUR EMAIL ADDRESS --></email>
+            <name>Tóth Ferenc</name>
+            <email>tothferenc626@gmail.com</email>
             <organization>Faculty of Informatics, University of Debrecen</organization>
             <organizationUrl>http://www.inf.unideb.hu/</organizationUrl>
         </developer>

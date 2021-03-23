@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -24,46 +25,42 @@ public class Homework2 {
      * Returns the longest country name translation.
      */
     public Optional<String> streamPipeline1() {
-        // TODO
-        return null;
+        return countries.stream().flatMap(country -> country.getTranslations().values().stream()).max(Comparator.comparing(country -> country.length()));
     }
 
     /**
      * Returns the longest Italian (i.e., {@code "it"}) country name translation.
      */
     public Optional<String> streamPipeline2() {
-        // TODO
-        return null;
+        return countries.stream().flatMap(country -> country.getTranslations().entrySet().stream()).filter(country -> country.getKey() == "it").max(Comparator.comparing(country -> country.getValue().length())).map(country -> country.getValue());
     }
 
     /**
      * Prints the longest country name translation together with its language code in the form language=translation.
      */
     public void streamPipeline3() {
-        // TODO
+         countries.stream().map(country -> country.getTranslations()).flatMap(country -> country.entrySet().stream()).filter(z->z.getValue()==(countries.stream().map(country -> country.getTranslations()).flatMap(x -> x.values().stream()).max(Comparator.comparingInt(y->y.length())).get())).forEach(System.out::println);
     }
 
     /**
      * Prints single word country names (i.e., country names that do not contain any space characters).
      */
     public void streamPipeline4() {
-        // TODO
+        countries.stream().map(Country::getName).filter(name -> !name.contains(" ")).forEach(System.out::println);
     }
 
     /**
      * Returns the country name with the most number of words.
      */
     public Optional<String> streamPipeline5() {
-        // TODO
-        return null;
+        return countries.stream().max(Comparator.comparingInt(country -> country.getName().split(" ").length)).map(Country::getName);
     }
 
     /**
      * Returns whether there exists at least one capital that is a palindrome.
      */
     public boolean streamPipeline6() {
-        // TODO
-        return false;
+        return countries.stream().map(Country::getCapital).anyMatch(country -> country.toLowerCase().equals(new StringBuilder(country).reverse().toString()));
     }
 
     /**
@@ -86,40 +83,36 @@ public class Homework2 {
      * Returns a map that contains for each character the number of occurrences in country names ignoring case.
      */
     public Map<Character, Long> streamPipeline9() {
-        // TODO
-        return null;
-    }
+        return countries.stream().flatMap(country -> country.getName().toLowerCase().chars().mapToObj(c -> (char) c)).collect(Collectors.groupingBy(c -> c,Collectors.counting()));
+  }
 
     /**
      * Returns a map that contains the number of countries for each possible timezone.
      */
     public Map<ZoneId, Long> streamPipeline10() {
-        // TODO
-        return null;
-    }
+        return countries.stream().flatMap(country -> country.getTimezones().stream()).collect(Collectors.groupingBy(country -> country,Collectors.counting()));
+   
+}
 
     /**
      * Returns the number of country names by region that starts with their two-letter country code ignoring case.
      */
     public Map<Region, Long> streamPipeline11() {
-        // TODO
-        return null;
+        return countries.stream().filter(country -> country.getCode().equalsIgnoreCase(country.getName().substring(0,2))).collect(Collectors.groupingBy(country -> country.getRegion(), Collectors.counting()));
     }
 
     /**
      * Returns a map that contains the number of countries whose population is greater or equal than the population average versus the the number of number of countries with population below the average.
      */
     public Map<Boolean, Long> streamPipeline12() {
-        // TODO
-        return null;
+        return countries.stream().collect(groupingBy(country -> country.getPopulation() >= countries.stream().mapToLong(Country::getPopulation).average().getAsDouble(), counting()));
     }
 
     /**
      * Returns a map that contains for each country code the name of the corresponding country in Portuguese ({@code "pt"}).
      */
     public Map<String, String> streamPipeline13() {
-        // TODO
-        return null;
+        return countries.stream().collect(Collectors.toMap(country -> country.getCode(), translation -> translation.getTranslations().get("pt")));
     }
 
     /**
